@@ -16,8 +16,8 @@ const mapActions = dispatch => ({
   close: () => {
     dispatch(actions.closeAddModal())
   },
-  saveAndClose: () => {
-    dispatch(actions.saveAndCloseAddModal())
+  saveAndClose: (example) => {
+    dispatch(actions.saveAndCloseAddModal(example))
   },
 })
 
@@ -35,7 +35,7 @@ class ExampleTable extends Component {
       <Modal
         title='Add example'
         visible={Boolean(example)}
-        onOk={() => saveAndClose()}
+        onOk={() => saveAndClose(example)}
         onCancel={() => close()}
         okText='add'
       >

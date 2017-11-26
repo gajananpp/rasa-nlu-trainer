@@ -1,3 +1,4 @@
+import tipo from 'tipo'
 // @flow
 const ROOT_PATH = process.env.NODE_ENV === 'production'
   ? '/'
@@ -67,6 +68,28 @@ export const save = (source: string): Function =>  async (
   }
 }
 
+export const ADD_TYPOS = 'ADD_TYPOS'
+export const addTypos = (example) => {
+  const typos = tipo.getTypos(example.text)
+  let exampleIDCounter = example.id
+  let typoExamples = typos.map(typo => {
+    exampleIDCounter = exampleIDCounter + 1
+    return {
+      text: typo,
+      intent: example.intent,
+      entities: example.entities,
+      updatedAt: Date.now(),
+      isExpanded: false,
+      id: (exampleIDCounter).toString()
+    }
+  })
+  typoExamples = [example, ...typoExamples]
+  return {
+    type: ADD_TYPOS,
+    payload: typoExamples
+  }
+}
+
 export const EXPAND = 'EXPAND'
 export const expand = (id: string): Object => ({
   type: EXPAND,
@@ -88,6 +111,12 @@ export const closeAddModal = (): Object => ({
   type: CLOSE_ADD_MODAL,
 })
 export const SAVE_AND_CLOSE_ADD_MODAL = 'SAVE_AND_CLOSE_ADD_MODAL'
-export const saveAndCloseAddModal = (): Object => ({
-  type: SAVE_AND_CLOSE_ADD_MODAL,
-})
+// export const saveAndCloseAddModal = (example): Object => ({
+//   type: SAVE_AND_CLOSE_ADD_MODAL,
+// })
+export const saveAndCloseAddModal = (example): Object => {
+  return dispatch => {
+    dispatch(addTypos(example))
+    dispatch({type: SAVE_AND_CLOSE_ADD_MODAL})
+  }
+}

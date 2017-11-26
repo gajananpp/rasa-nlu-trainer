@@ -16,6 +16,7 @@ import {
   CLOSE_ADD_MODAL,
   SAVE_AND_CLOSE_ADD_MODAL,
   RESET,
+  ADD_TYPOS
 } from './actions'
 
 let exampleIDCounter = 0
@@ -90,6 +91,9 @@ export default function reducer (
         return state
       }
       return immutable.set(state, `selection`, { idExample: id, start, end })
+    }
+    case ADD_TYPOS: {
+      return Object.assign({}, state, {examples: [...state.examples, ...payload]})
     }
     case FETCH_DATA: {
       const { data, path } = payload
